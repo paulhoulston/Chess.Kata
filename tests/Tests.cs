@@ -66,21 +66,21 @@ namespace Tests
 
         public void Move(Position position, Action onMoveValid)
         {
-            if (!IsForwardsMove(position) &&
-                !IsSidewaysMove(position))
+            if (IsNotForwardsMove(position) &&
+                IsNotSidewaysMove(position))
             {
                 onMoveValid();
             }
         }
 
-        bool IsForwardsMove(Position position)
+        bool IsNotForwardsMove(Position position)
         {
-            return _position.X.Equals(position.X);
+            return !_position.X.Equals(position.X);
         }
 
-        bool IsSidewaysMove(Position position)
+        bool IsNotSidewaysMove(Position position)
         {
-            return _position.Y.Equals(position.Y);
+            return !_position.Y.Equals(position.Y);
         }
     }
 
