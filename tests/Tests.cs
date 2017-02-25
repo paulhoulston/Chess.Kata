@@ -32,9 +32,24 @@ namespace Tests
 
                 Assert.False(moveIsValid);
             }
+
+
+            [Fact]
+            public void AND_the_Bishop_cannot_move_sideways()
+            {
+                var moveIsValid = false;
+
+                var bishop = new Bishop("E", "4");
+
+                bishop.Move("B", "4", () => moveIsValid = true);
+
+                Assert.False(moveIsValid);
+            }
+
+
         }
     }
-    
+
     public class Bishop
     {
         readonly string _positionX;
@@ -48,8 +63,21 @@ namespace Tests
 
         public void Move(string positionX, string positionY, Action onMoveValid)
         {
-            if(!_positionX.Equals(positionX))
+            if (!IsForwardsMove(positionX) &&
+                !IsSidewaysMove(positionY))
+            {
                 onMoveValid();
+            }
+        }
+
+        bool IsForwardsMove(string positionX)
+        {
+            return _positionX.Equals(positionX);
+        }
+
+        bool IsSidewaysMove(string positionY)
+        {
+            return _positionY.Equals(positionY);
         }
     }
 }
