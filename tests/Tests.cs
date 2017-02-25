@@ -14,9 +14,9 @@ namespace Tests
             {
                 var moveIsValid = false;
 
-                var bishop = new Bishop();
+                var bishop = new Bishop("E", "4");
 
-                bishop.Move(() => moveIsValid = true);
+                bishop.Move("A", "8", () => moveIsValid = true);
 
                 Assert.True(moveIsValid);
             }
@@ -26,9 +26,9 @@ namespace Tests
             {
                 var moveIsValid = false;
 
-                var bishop = new Bishop();
+                var bishop = new Bishop("E", "4");
 
-                bishop.Move(() => moveIsValid = true);
+                bishop.Move("E", "5", () => moveIsValid = true);
 
                 Assert.False(moveIsValid);
             }
@@ -37,9 +37,19 @@ namespace Tests
     
     public class Bishop
     {
-        public void Move(Action onMoveValid)
+        readonly string _positionX;
+        readonly string _positionY;
+
+        public Bishop(string positionX, string positionY)
         {
-            onMoveValid();
+            _positionX = positionX;
+            _positionY = positionY;
+        }
+
+        public void Move(string positionX, string positionY, Action onMoveValid)
+        {
+            if(!_positionX.Equals(positionX))
+                onMoveValid();
         }
     }
 }
