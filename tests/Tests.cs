@@ -46,7 +46,17 @@ namespace Tests
                 Assert.False(moveIsValid);
             }
 
+            [Fact]
+            public void AND_any_other_space_is_not_valid()
+            {
+                var moveIsValid = false;
 
+                var bishop = new Bishop("E", "4");
+
+                bishop.Move("B", "7", () => moveIsValid = true);
+
+                Assert.False(moveIsValid);                
+            }
         }
     }
 
