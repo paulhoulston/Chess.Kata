@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Tests
@@ -9,14 +10,14 @@ namespace Tests
         {
             //readonly string[] validMoves = new[] { "A8", "B7", "C6", "D5", "B3", "A2", "B1", "C2", "D3", "F5", "G6", "H7" };
 
+            readonly Bishop bishop = new Bishop(new Position("E", 4));
+
             [Fact]
             public void THEN_the_Bishop_can_move_to_any_diagonal_space_from_their_position()
             {
                 var moveIsValid = false;
 
-                var bishop = new Bishop("E", "4");
-
-                bishop.Move("A", "8", () => moveIsValid = true);
+                bishop.Move(new Position("A", 8), () => moveIsValid = true);
 
                 Assert.True(moveIsValid);
             }
@@ -26,9 +27,7 @@ namespace Tests
             {
                 var moveIsValid = false;
 
-                var bishop = new Bishop("E", "4");
-
-                bishop.Move("E", "5", () => moveIsValid = true);
+                bishop.Move(new Position("E", 5), () => moveIsValid = true);
 
                 Assert.False(moveIsValid);
             }
@@ -39,9 +38,7 @@ namespace Tests
             {
                 var moveIsValid = false;
 
-                var bishop = new Bishop("E", "4");
-
-                bishop.Move("B", "4", () => moveIsValid = true);
+                bishop.Move(new Position("B", 4), () => moveIsValid = true);
 
                 Assert.False(moveIsValid);
             }
@@ -51,43 +48,62 @@ namespace Tests
             {
                 var moveIsValid = false;
 
-                var bishop = new Bishop("E", "4");
+                bishop.Move(new Position("B", 7), () => moveIsValid = true);
 
-                bishop.Move("B", "7", () => moveIsValid = true);
-
-                Assert.False(moveIsValid);                
+                Assert.False(moveIsValid);
             }
         }
     }
 
     public class Bishop
     {
-        readonly string _positionX;
-        readonly string _positionY;
+        readonly Position _position;
 
-        public Bishop(string positionX, string positionY)
+        public Bishop(Position position)
         {
-            _positionX = positionX;
-            _positionY = positionY;
+            _position = position;
         }
 
-        public void Move(string positionX, string positionY, Action onMoveValid)
+        public void Move(Position position, Action onMoveValid)
         {
-            if (!IsForwardsMove(positionX) &&
-                !IsSidewaysMove(positionY))
+            if (!IsForwardsMove(position) &&
+                !IsSidewaysMove(position))
             {
                 onMoveValid();
             }
         }
 
-        bool IsForwardsMove(string positionX)
+        bool IsForwardsMove(Position position)
         {
-            return _positionX.Equals(positionX);
+            return _position.X.Equals(position.X);
         }
 
-        bool IsSidewaysMove(string positionY)
+        bool IsSidewaysMove(Position position)
         {
-            return _positionY.Equals(positionY);
+            return _position.Y.Equals(position.Y);
         }
+    }
+
+    public class Position
+    {
+        static readonly IDictionary<string, int> _xMapping = new Dictionary<string, int>{
+            {"A",1},
+            {"B",2},
+            {"C",3},
+            {"D",4},
+            {"E",5},
+            {"F",6},
+            {"G",7},
+            {"H",8}
+        };
+
+        public Position(string positionX, int positionY)
+        {
+            X = _xMapping[positionX];
+            Y = positionY;
+        }
+
+        public int X { get; private set; }
+        public int Y { get; private set; }
     }
 }
