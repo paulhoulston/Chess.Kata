@@ -1,5 +1,7 @@
 using System;
 using Chess.Kata;
+using Chess.Kata.Pieces;
+using Chess.Kata.Pieces.Validators;
 using Xunit;
 
 namespace Tests
@@ -8,15 +10,12 @@ namespace Tests
     {
         public class WHEN_the_castle_is_in_position_F3
         {
-            readonly Castle _castle = new Castle(new Position("F3"));
-
             [Fact]
             public void THEN_I_cannot_move_on_to_my_current_position()
             {
                 var moveIsValid = false;
-
-                _castle.Move(new Position("F3"), () => moveIsValid = true);
-
+                var castle = new Castle(new Position("F3"), () => moveIsValid = true);
+                castle.Move(new Position("F3"));
                 Assert.False(moveIsValid);
             }
 
@@ -40,19 +39,22 @@ namespace Tests
         }
     }
 
-    public class Castle
+    public class Castle : IAmAChessPiece
     {
         readonly Position _position;
+        readonly ValidatorCollection _validators;
 
-        public Castle(Position position)
+        public Castle(Position currentPosition, Action onValidMove)
         {
-            _position = position;
+            _position = currentPosition;
+            _validators = new ValidatorCollection(
+                onValidMove,
+                new SamePositionValidator(currentPosition));
         }
 
-        public void Move(Position position, Action onValidMove)
+        public void Move(Position newPosition)
         {
-            if (IsNotCurrentSpace(position))
-                onValidMove();
+            _validators.IsValid(newPosition);
         }
 
         bool IsNotCurrentSpace(Position position)

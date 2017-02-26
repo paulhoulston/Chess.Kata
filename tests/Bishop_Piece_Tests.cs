@@ -8,8 +8,6 @@ namespace Tests
     {
         public class WHEN_the_Bishop_is_in_position_E4
         {
-            readonly Bishop _bishop = new Bishop(new Position("E4"));
-
             [Theory]
             [InlineData("A8")]
             [InlineData("B1")]
@@ -27,8 +25,8 @@ namespace Tests
             public void THEN_any_diagonal_space_is_valid(string position)
             {
                 var moveIsValid = false;
-
-                _bishop.Move(new Position(position), () => moveIsValid = true);
+                var bishop = new Bishop(new Position("E4"), () => moveIsValid = true);
+                bishop.Move(new Position(position));
 
                 Assert.True(moveIsValid);
             }
@@ -44,9 +42,8 @@ namespace Tests
             public void AND_any_sideways_space_is_not_valid(string position)
             {
                 var moveIsValid = false;
-
-                _bishop.Move(new Position(position), () => moveIsValid = true);
-
+                var bishop = new Bishop(new Position("E4"), () => moveIsValid = true);
+                bishop.Move(new Position(position));
                 Assert.False(moveIsValid);
             }
 
@@ -61,9 +58,8 @@ namespace Tests
             public void AND_any_up_or_down_space_is_not_valid(string position)
             {
                 var moveIsValid = false;
-
-                _bishop.Move(new Position(position), () => moveIsValid = true);
-
+                var bishop = new Bishop(new Position("E4"), () => moveIsValid = true);
+                bishop.Move(new Position(position));
                 Assert.False(moveIsValid);
             }
 
@@ -71,56 +67,54 @@ namespace Tests
             public void AND_moving_on_to_oneself_is_not_a_valid_move()
             {
                 var moveIsValid = false;
-
-                _bishop.Move(new Position("E4"), () => moveIsValid = true);
-
+                var bishop = new Bishop(new Position("E4"), () => moveIsValid = true);
+                bishop.Move(new Position("E4"));
                 Assert.False(moveIsValid);
             }
 
             [Theory]
-            [InlineData("A1", false)]
-            [InlineData("A2", false)]
-            [InlineData("A3", false)]
-            [InlineData("A5", false)]
-            [InlineData("A6", false)]
-            [InlineData("A7", false)]
-            [InlineData("B2", false)]
-            [InlineData("B3", false)]
-            [InlineData("B5", false)]
-            [InlineData("B6", false)]
-            [InlineData("B8", false)]
-            [InlineData("C1", false)]
-            [InlineData("C3", false)]
-            [InlineData("C5", false)]
-            [InlineData("C7", false)]
-            [InlineData("C8", false)]
-            [InlineData("D1", false)]
-            [InlineData("D2", false)]
-            [InlineData("D6", false)]
-            [InlineData("D7", false)]
-            [InlineData("D8", false)]
-            [InlineData("F1", false)]
-            [InlineData("F2", false)]
-            [InlineData("F6", false)]
-            [InlineData("F7", false)]
-            [InlineData("F8", false)]
-            [InlineData("G1", false)]
-            [InlineData("G3", false)]
-            [InlineData("G5", false)]
-            [InlineData("G7", false)]
-            [InlineData("G8", false)]
-            [InlineData("H2", false)]
-            [InlineData("H3", false)]
-            [InlineData("H5", false)]
-            [InlineData("H6", false)]
-            [InlineData("H8", false)]
-            public void AND_any_other_move_is_not_valid(string position, bool isValid)
+            [InlineData("A1")]
+            [InlineData("A2")]
+            [InlineData("A3")]
+            [InlineData("A5")]
+            [InlineData("A6")]
+            [InlineData("A7")]
+            [InlineData("B2")]
+            [InlineData("B3")]
+            [InlineData("B5")]
+            [InlineData("B6")]
+            [InlineData("B8")]
+            [InlineData("C1")]
+            [InlineData("C3")]
+            [InlineData("C5")]
+            [InlineData("C7")]
+            [InlineData("C8")]
+            [InlineData("D1")]
+            [InlineData("D2")]
+            [InlineData("D6")]
+            [InlineData("D7")]
+            [InlineData("D8")]
+            [InlineData("F1")]
+            [InlineData("F2")]
+            [InlineData("F6")]
+            [InlineData("F7")]
+            [InlineData("F8")]
+            [InlineData("G1")]
+            [InlineData("G3")]
+            [InlineData("G5")]
+            [InlineData("G7")]
+            [InlineData("G8")]
+            [InlineData("H2")]
+            [InlineData("H3")]
+            [InlineData("H5")]
+            [InlineData("H6")]
+            [InlineData("H8")]
+            public void AND_any_other_move_is_not_valid(string position)
             {
                 var moveIsValid = false;
-
-                _bishop.Move(new Position(position), () => moveIsValid = true);
-
-                Assert.Equal(isValid, moveIsValid);
+                var bishop = new Bishop(new Position("E4"), () => moveIsValid = true);
+                bishop.Move(new Position(position));
+                Assert.False(moveIsValid);
             }
         }
     }
