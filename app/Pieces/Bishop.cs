@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Chess.Kata.Pieces
 {
-        public class Bishop
+    public class Bishop
     {
         readonly Position _position;
 
