@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Tests
@@ -64,9 +65,7 @@ namespace Tests
 
         public void Move(Position position, Action onMoveValid)
         {
-            if (IsNotForwardsMove(position) &&
-                IsNotSidewaysMove(position) &&
-                IsDiagonalMove(position))
+            if (IsDiagonalMove(position))
             {
                 onMoveValid();
             }
@@ -74,46 +73,27 @@ namespace Tests
 
         bool IsDiagonalMove(Position position)
         {
-            var board = new List<int[]>{
-                new[] { 0, 0, 0, 0, 0, 0, 0, 0 },
-                new[] { 0, 0, 0, 0, 0, 0, 0, 0 },
-                new[] { 0, 0, 0, 0, 0, 0, 0, 0 },
-                new[] { 0, 0, 0, 0, 0, 0, 0, 0 },
-                new[] { 0, 0, 0, 0, 0, 0, 0, 0 },
-                new[] { 0, 0, 0, 0, 0, 0, 0, 0 },
-                new[] { 0, 0, 0, 0, 0, 0, 0, 0 },
-                new[] { 0, 0, 0, 0, 0, 0, 0, 0 }
-            };
+            var availableDiagonals = new List<dynamic>();
 
-            MarkAsDiagonal(1, 1, board, (x, y) => x < 8 && y < 8);
-            MarkAsDiagonal(-1, -1, board, (x, y) => x >= 0 && y >= 0);
-            MarkAsDiagonal(-1, 1, board, (x, y) => x >= 0 && y < 8);
-            MarkAsDiagonal(1, -1, board, (x, y) => x < 8 && y >= 0);
+            GetDiagonalsInQuadrant(1, 1, availableDiagonals, (x, y) => x < 8 && y < 8);
+            GetDiagonalsInQuadrant(-1, -1, availableDiagonals, (x, y) => x >= 0 && y >= 0);
+            GetDiagonalsInQuadrant(-1, 1, availableDiagonals, (x, y) => x >= 0 && y < 8);
+            GetDiagonalsInQuadrant(1, -1, availableDiagonals, (x, y) => x < 8 && y >= 0);
 
-            return board[position.Y][position.X]==1;
+            return availableDiagonals.Any(entry => entry.X == position.X && entry.Y == position.Y);
         }
 
-        void MarkAsDiagonal(int xSign, int ySign, List<int[]> board, Func<int, int, bool> condition)
+        void GetDiagonalsInQuadrant(int xSign, int ySign, List<dynamic> board, Func<int, int, bool> condition)
         {
             var x = _position.X;
             var y = _position.Y;
             while (condition(x, y))
             {
-                board[y][x] = 1;
+                board.Add(new { Y = y, X = x });
 
                 x += xSign * 1;
                 y += ySign * 1;
             }
-        }
-
-        bool IsNotForwardsMove(Position position)
-        {
-            return !_position.X.Equals(position.X);
-        }
-
-        bool IsNotSidewaysMove(Position position)
-        {
-            return !_position.Y.Equals(position.Y);
         }
     }
 
