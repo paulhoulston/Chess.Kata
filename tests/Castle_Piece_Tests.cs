@@ -56,13 +56,5 @@ namespace Tests
         {
             _validators.IsValid(newPosition);
         }
-
-        bool IsNotCurrentSpace(Position position)
-        {
-            return
-                _position.X != position.X &&
-                _position.Y != position.Y;
-        }
-
     }
 }
