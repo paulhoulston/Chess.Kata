@@ -11,45 +11,18 @@ namespace Tests
         {
             readonly Bishop bishop = new Bishop(new Position("E4"));
 
-            [Fact]
-            public void THEN_the_Bishop_can_move_to_any_diagonal_space_from_their_position()
+            [Theory]
+            [InlineData("A8", true)]
+            [InlineData("E5", false)]
+            [InlineData("B5", false)]
+            [InlineData("C7", false)]
+            public void THEN_the_specified_move_is_valid(string position, bool isValid)
             {
                 var moveIsValid = false;
 
-                bishop.Move(new Position("A8"), () => moveIsValid = true);
+                bishop.Move(new Position(position), () => moveIsValid = true);
 
-                Assert.True(moveIsValid);
-            }
-
-            [Fact]
-            public void AND_the_Bishop_cannot_move_forwards()
-            {
-                var moveIsValid = false;
-
-                bishop.Move(new Position("E5"), () => moveIsValid = true);
-
-                Assert.False(moveIsValid);
-            }
-
-
-            [Fact]
-            public void AND_the_Bishop_cannot_move_sideways()
-            {
-                var moveIsValid = false;
-
-                bishop.Move(new Position("B4"), () => moveIsValid = true);
-
-                Assert.False(moveIsValid);
-            }
-
-            [Fact]
-            public void AND_any_other_space_is_not_valid()
-            {
-                var moveIsValid = false;
-
-                bishop.Move(new Position("C7"), () => moveIsValid = true);
-
-                Assert.False(moveIsValid);
+                Assert.Equal(isValid, moveIsValid);
             }
         }
     }
