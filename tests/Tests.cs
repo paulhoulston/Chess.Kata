@@ -8,16 +8,14 @@ namespace Tests
     {
         public class WHEN_the_Bishop_is_in_position_E4
         {
-            //readonly string[] validMoves = new[] { "A8", "B7", "C6", "D5", "B3", "A2", "B1", "C2", "D3", "F5", "G6", "H7" };
-
-            readonly Bishop bishop = new Bishop(new Position("E", 4));
+            readonly Bishop bishop = new Bishop(new Position("E4"));
 
             [Fact]
             public void THEN_the_Bishop_can_move_to_any_diagonal_space_from_their_position()
             {
                 var moveIsValid = false;
 
-                bishop.Move(new Position("A", 8), () => moveIsValid = true);
+                bishop.Move(new Position("A8"), () => moveIsValid = true);
 
                 Assert.True(moveIsValid);
             }
@@ -27,7 +25,7 @@ namespace Tests
             {
                 var moveIsValid = false;
 
-                bishop.Move(new Position("E", 5), () => moveIsValid = true);
+                bishop.Move(new Position("E5"), () => moveIsValid = true);
 
                 Assert.False(moveIsValid);
             }
@@ -38,7 +36,7 @@ namespace Tests
             {
                 var moveIsValid = false;
 
-                bishop.Move(new Position("B", 4), () => moveIsValid = true);
+                bishop.Move(new Position("B4"), () => moveIsValid = true);
 
                 Assert.False(moveIsValid);
             }
@@ -48,7 +46,7 @@ namespace Tests
             {
                 var moveIsValid = false;
 
-                bishop.Move(new Position("B", 7), () => moveIsValid = true);
+                bishop.Move(new Position("C7"), () => moveIsValid = true);
 
                 Assert.False(moveIsValid);
             }
@@ -67,9 +65,44 @@ namespace Tests
         public void Move(Position position, Action onMoveValid)
         {
             if (IsNotForwardsMove(position) &&
-                IsNotSidewaysMove(position))
+                IsNotSidewaysMove(position) &&
+                IsDiagonalMove(position))
             {
                 onMoveValid();
+            }
+        }
+
+        bool IsDiagonalMove(Position position)
+        {
+            var board = new List<int[]>{
+                new[] { 0, 0, 0, 0, 0, 0, 0, 0 },
+                new[] { 0, 0, 0, 0, 0, 0, 0, 0 },
+                new[] { 0, 0, 0, 0, 0, 0, 0, 0 },
+                new[] { 0, 0, 0, 0, 0, 0, 0, 0 },
+                new[] { 0, 0, 0, 0, 0, 0, 0, 0 },
+                new[] { 0, 0, 0, 0, 0, 0, 0, 0 },
+                new[] { 0, 0, 0, 0, 0, 0, 0, 0 },
+                new[] { 0, 0, 0, 0, 0, 0, 0, 0 }
+            };
+
+            MarkAsDiagonal(1, 1, board, (x, y) => x < 8 && y < 8);
+            MarkAsDiagonal(-1, -1, board, (x, y) => x >= 0 && y >= 0);
+            MarkAsDiagonal(-1, 1, board, (x, y) => x >= 0 && y < 8);
+            MarkAsDiagonal(1, -1, board, (x, y) => x < 8 && y >= 0);
+
+            return board[position.Y][position.X]==1;
+        }
+
+        void MarkAsDiagonal(int xSign, int ySign, List<int[]> board, Func<int, int, bool> condition)
+        {
+            var x = _position.X;
+            var y = _position.Y;
+            while (condition(x, y))
+            {
+                board[y][x] = 1;
+
+                x += xSign * 1;
+                y += ySign * 1;
             }
         }
 
@@ -86,21 +119,21 @@ namespace Tests
 
     public class Position
     {
-        static readonly IDictionary<string, int> _xMapping = new Dictionary<string, int>{
-            {"A",1},
-            {"B",2},
-            {"C",3},
-            {"D",4},
-            {"E",5},
-            {"F",6},
-            {"G",7},
-            {"H",8}
+        static readonly IDictionary<char, int> _xMapping = new Dictionary<char, int>{
+            {'A',0},
+            {'B',1},
+            {'C',2},
+            {'D',3},
+            {'E',4},
+            {'F',5},
+            {'G',6},
+            {'H',7}
         };
 
-        public Position(string positionX, int positionY)
+        public Position(string position)
         {
-            X = _xMapping[positionX];
-            Y = positionY;
+            X = _xMapping[position[0]];
+            Y = int.Parse(position[1].ToString()) - 1;
         }
 
         public int X { get; private set; }
