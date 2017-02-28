@@ -13,8 +13,8 @@ namespace Chess.Kata.Pieces
 
         public void IsValid(Position newPosition, Action onValid)
         {
-            if (_currentPosition.X != newPosition.X &&
-                _currentPosition.Y != newPosition.Y)
+            //Console.WriteLine("SamePositionValidator::IsValid -> Starting position ({0},{1}), Desired position ({2},{3})", _currentPosition.X, _currentPosition.Y, newPosition.X, newPosition.Y);
+            if (!(_currentPosition.X == newPosition.X && _currentPosition.Y == newPosition.Y))
             {
                 onValid();
             }
